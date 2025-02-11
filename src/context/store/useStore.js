@@ -20,7 +20,26 @@ const useStore = create(
         });
       },
 
-      setExpression: (expression) => set({ expression }),
+      setExpression: (newExpression) => {
+        // If it's a function, execute it with current expression
+        const expression = typeof newExpression === 'function' 
+          ? newExpression(get().expression)
+          : newExpression;
+        
+        set({ expression });
+        
+        // Only calculate if not empty
+        if (expression.trim()) {
+          try {
+            // Evaluate the expression
+            const result = eval(expression);
+            set({ result: result.toString() });
+          } catch (error) {
+            // Don't update result for incomplete expressions
+          }
+        }
+      },
+
       setResult: (result) => set({ result }),
       toggleDarkMode: () => set(state => ({ darkMode: !state.darkMode })),
 
@@ -47,8 +66,15 @@ const useStore = create(
       calculateResult: () => {
         const { expression } = get();
         try {
+          if (!expression.trim()) {
+            set({ result: '0' });
+            return;
+          }
           const result = eval(expression);
-          set({ result: result.toString(), expression: '' });
+          set({ 
+            result: result.toString(),
+            expression: result.toString() // Update expression with result
+          });
         } catch (error) {
           set({ result: 'Error', expression: '' });
         }
