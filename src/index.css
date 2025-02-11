@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  .calculator-grid {
+    @apply grid grid-cols-4 gap-2;
+  }
+
+  .component-palette {
+    @apply flex flex-wrap gap-2 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg;
+  }
+}
